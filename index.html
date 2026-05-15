@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -102,7 +101,7 @@
       white-space: nowrap;
       font-style: italic;
       letter-spacing: 4px;
-      z-index: 100;
+      z-index: 999;
       text-align: center;
       text-shadow:
         0 0 8px rgba(255, 255, 255, 0.9),
@@ -121,7 +120,7 @@
       text-shadow:
         0 0 10px rgba(255, 90, 180, 0.8),
         0 0 24px rgba(255, 90, 180, 0.45);
-      z-index: 100;
+      z-index: 999;
       white-space: nowrap;
       opacity: 0.92;
     }
@@ -183,8 +182,8 @@
       width: 7vmin;
       height: 7vmin;
       background-color: #ff5bbd;
-      filter: blur(8vmin);
-      opacity: 0.9;
+      filter: blur(3vmin);
+      opacity: 0.75;
     }
 
     .flower__leaf {
@@ -201,8 +200,7 @@
       transform-origin: bottom center;
       opacity: 0.92;
       box-shadow:
-        inset 0 0 2vmin rgba(255, 255, 255, 0.65),
-        0 0 2vmin rgba(255, 80, 170, 0.35);
+        inset 0 0 1vmin rgba(255, 255, 255, 0.45);
     }
 
     .flower__leaf--1 {
@@ -289,7 +287,7 @@
         linear-gradient(to top, transparent 10%, var(--green-2), var(--green-3));
       box-shadow:
         inset 0 0 2px rgba(0, 0, 0, 0.6),
-        0 0 1vmin rgba(32, 184, 106, 0.26);
+        0 0 1vmin rgba(32, 184, 106, 0.18);
       animation: grow-flower-tree 4s backwards;
       animation-delay: var(--grow-delay);
     }
@@ -305,7 +303,7 @@
       border-top-right-radius: var(--h);
       border-bottom-left-radius: var(--h);
       background-image: linear-gradient(to top, rgba(11, 93, 53, 0.5), var(--green-4));
-      box-shadow: 0 0 1vmin rgba(36, 200, 117, 0.25);
+      box-shadow: 0 0 1vmin rgba(36, 200, 117, 0.16);
     }
 
     .flower__line__leaf--1 {
@@ -396,6 +394,20 @@
       animation-delay: 0.9s;
     }
 
+    .flower.is-far {
+      animation: none;
+    }
+
+    .flower.is-far .flower__leafs,
+    .flower.is-far .flower__line {
+      animation: none;
+    }
+
+    .flower.is-far .flower__light,
+    .flower.is-far .flower__leafs::after {
+      display: none;
+    }
+
     .grass-layer {
       position: fixed;
       left: 0;
@@ -418,7 +430,7 @@
       transform-origin: bottom center;
       transform: rotate(var(--rot));
       opacity: var(--opacity);
-      filter: drop-shadow(0 0 0.8vmin rgba(31, 207, 96, 0.25));
+      filter: drop-shadow(0 0 0.8vmin rgba(31, 207, 96, 0.2));
       animation: grass-sway var(--duration) ease-in-out infinite;
       animation-delay: var(--delay);
     }
@@ -599,13 +611,13 @@
   <div class="moon"></div>
 
   <h1 class="happy-woman-day">𝓗𝓪𝓹𝓹𝔂 𝓑𝓲𝓻𝓽𝓱𝓭𝓪𝔂 𝓣𝓻𝓲𝓷𝓱 𝓝𝓾̛̃</h1>
-  <div class="subtitle">999 đóa hoa hồng anh Tuấn Anh dành tặng em</div>
+  <div class="subtitle">Một cánh đồng hoa hồng dành tặng em</div>
 
   <div class="grass-layer" id="grassLayer"></div>
   <div class="field" id="field"></div>
   <div class="petal-rain" id="petalRain"></div>
 
-  <div class="counter-badge">999 roses</div>
+  <div class="counter-badge">Loading roses...</div>
 
   <template id="flowerTemplate">
     <div class="flower">
@@ -636,9 +648,9 @@
   </template>
 
   <script>
-    const FLOWER_COUNT = 999;
-    const GRASS_COUNT = 180;
-    const FALLING_PETAL_COUNT = 45;
+    const FLOWER_COUNT = window.innerWidth < 768 ? 80 : 150;
+    const GRASS_COUNT = window.innerWidth < 768 ? 40 : 70;
+    const FALLING_PETAL_COUNT = window.innerWidth < 768 ? 8 : 18;
 
     const field = document.getElementById("field");
     const flowerTemplate = document.getElementById("flowerTemplate");
@@ -649,47 +661,47 @@
       return Math.random() * (max - min) + min;
     }
 
-    function randomInt(min, max) {
-      return Math.floor(random(min, max + 1));
-    }
-
     function createFlower(index) {
       const node = flowerTemplate.content.firstElementChild.cloneNode(true);
 
       const row = index / FLOWER_COUNT;
-      const depth = Math.pow(row, 1.8);
+      const depth = 0.25 + Math.pow(row, 1.5) * 0.75;
 
-      const left = random(-8, 108);
-      const bottom = random(-4, 62) * depth;
-      const scale = 0.1 + depth * 0.72 + random(-0.035, 0.035);
-      const height = 18 + depth * 58 + random(-3, 5);
-      const lineWidth = 0.35 + depth * 1.15;
-      const rotation = random(-38, 38);
-      const sway = random(1.5, 5.5);
-      const opacity = 0.28 + depth * 0.72;
+      const left = random(-6, 106);
+      const bottom = random(-3, 58) * depth;
+      const scale = 0.12 + depth * 0.68 + random(-0.025, 0.025);
+      const height = 16 + depth * 54 + random(-3, 4);
+      const lineWidth = 0.35 + depth * 1;
+      const rotation = random(-36, 36);
+      const sway = random(1.2, 4.5);
+      const opacity = 0.32 + depth * 0.68;
       const z = Math.round(depth * 900);
 
       node.style.setProperty("--left", `${left}%`);
       node.style.setProperty("--bottom", `${bottom}vmin`);
-      node.style.setProperty("--scale", Math.max(scale, 0.08).toFixed(3));
+      node.style.setProperty("--scale", Math.max(scale, 0.1).toFixed(3));
       node.style.setProperty("--line-height", `${height.toFixed(2)}vmin`);
       node.style.setProperty("--line-width", `${lineWidth.toFixed(2)}vmin`);
       node.style.setProperty("--rot", `${rotation.toFixed(2)}deg`);
       node.style.setProperty("--sway", `${sway.toFixed(2)}deg`);
       node.style.setProperty("--opacity", opacity.toFixed(3));
       node.style.setProperty("--z", z);
-      node.style.setProperty("--move-duration", `${random(3.8, 7.5).toFixed(2)}s`);
+      node.style.setProperty("--move-duration", `${random(4.2, 8).toFixed(2)}s`);
       node.style.setProperty("--move-delay", `${random(-5, 0).toFixed(2)}s`);
-      node.style.setProperty("--bloom-delay", `${random(0.3, 4.8).toFixed(2)}s`);
-      node.style.setProperty("--grow-delay", `${random(0.1, 1.8).toFixed(2)}s`);
+      node.style.setProperty("--bloom-delay", `${random(0.2, 3).toFixed(2)}s`);
+      node.style.setProperty("--grow-delay", `${random(0.1, 1.2).toFixed(2)}s`);
 
-      if (scale < 0.22) {
+      if (scale < 0.28) {
+        node.classList.add("is-far");
+      }
+
+      if (scale < 0.32) {
         node.querySelectorAll(".flower__line__leaf--5, .flower__line__leaf--6, .flower__light").forEach((el) => {
           el.style.display = "none";
         });
       }
 
-      if (scale < 0.16) {
+      if (scale < 0.22) {
         node.querySelectorAll(".flower__line__leaf--3, .flower__line__leaf--4").forEach((el) => {
           el.style.display = "none";
         });
@@ -698,21 +710,19 @@
       return node;
     }
 
-    function createGrass(index) {
+    function createGrass() {
       const grass = document.createElement("div");
       grass.className = "grass";
 
       grass.style.setProperty("--left", `${random(-3, 103)}%`);
-      grass.style.setProperty("--height", `${random(16, 48)}vmin`);
-      grass.style.setProperty("--width", `${random(0.35, 1.1)}vmin`);
-      grass.style.setProperty("--rot", `${random(-45, 45)}deg`);
-      grass.style.setProperty("--sway", `${random(-4, 4)}deg`);
-      grass.style.setProperty("--duration", `${random(2.2, 5.5)}s`);
+      grass.style.setProperty("--height", `${random(14, 42)}vmin`);
+      grass.style.setProperty("--width", `${random(0.3, 0.8)}vmin`);
+      grass.style.setProperty("--rot", `${random(-42, 42)}deg`);
+      grass.style.setProperty("--sway", `${random(-3, 3)}deg`);
+      grass.style.setProperty("--duration", `${random(3, 6)}s`);
       grass.style.setProperty("--delay", `${random(-5, 0)}s`);
-      grass.style.setProperty("--opacity", `${random(0.35, 0.9)}`);
-
-      const green = Math.random() > 0.45 ? "#1fcf60" : "#159c45";
-      grass.style.setProperty("--color", green);
+      grass.style.setProperty("--opacity", `${random(0.3, 0.75)}`);
+      grass.style.setProperty("--color", Math.random() > 0.45 ? "#1fcf60" : "#159c45");
 
       return grass;
     }
@@ -722,11 +732,11 @@
       petal.className = "falling-petal";
 
       petal.style.setProperty("--left", `${random(-5, 105)}vw`);
-      petal.style.setProperty("--size", `${random(0.7, 1.8)}vmin`);
-      petal.style.setProperty("--opacity", `${random(0.25, 0.75)}`);
+      petal.style.setProperty("--size", `${random(0.7, 1.5)}vmin`);
+      petal.style.setProperty("--opacity", `${random(0.22, 0.55)}`);
       petal.style.setProperty("--rot", `${random(0, 360)}deg`);
-      petal.style.setProperty("--drift", `${random(-18, 18)}vw`);
-      petal.style.setProperty("--duration", `${random(9, 18)}s`);
+      petal.style.setProperty("--drift", `${random(-14, 14)}vw`);
+      petal.style.setProperty("--duration", `${random(12, 22)}s`);
       petal.style.setProperty("--delay", `${random(-18, 0)}s`);
 
       return petal;
@@ -742,7 +752,7 @@
       }
 
       for (let i = 0; i < GRASS_COUNT; i++) {
-        grassFragment.appendChild(createGrass(i));
+        grassFragment.appendChild(createGrass());
       }
 
       for (let i = 0; i < FALLING_PETAL_COUNT; i++) {
@@ -752,6 +762,11 @@
       field.appendChild(flowerFragment);
       grassLayer.appendChild(grassFragment);
       petalRain.appendChild(petalFragment);
+
+      const badge = document.querySelector(".counter-badge");
+      if (badge) {
+        badge.textContent = `${FLOWER_COUNT} roses`;
+      }
     }
 
     window.addEventListener("load", () => {
